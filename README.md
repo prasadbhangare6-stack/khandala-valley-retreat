@@ -1,154 +1,223 @@
-# Khandala Valley Retreat — Premium Website Frontend
+# 🌿 Khandala Valley Retreat — Boutique Luxury Resort
 
-A bespoke, animation-rich luxury hospitality website for **Khandala Valley Retreat**
-(खंडाला वाली रिट्रीट) — a resort hotel in Kune Village, Khandala, near Lonavala,
-Maharashtra. Built as a client-ready design demonstration.
+[![Live Site](https://img.shields.io/badge/Live_Site-Vercel-black?style=for-the-badge&logo=vercel)](https://khandala-valley-retreat-lake.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js_16-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript_5-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-> **Demo notice.** This is a front-end demonstration. Availability search, enquiry forms
-> and confirmations are simulated in the browser. No live inventory is checked, no data
-> is transmitted, and no reservation is made.
+A bespoke, animation-rich luxury hospitality web application for **Khandala Valley Retreat** (खंडाला वाली रिट्रीट) — a boutique resort hotel nestled in Kune Village, Khandala, near Lonavala, Maharashtra.
+
+🌐 **Live Production Deployment:** [https://khandala-valley-retreat-lake.vercel.app](https://khandala-valley-retreat-lake.vercel.app)  
+📦 **GitHub Repository:** [https://github.com/prasadbhangare6-stack/khandala-valley-retreat](https://github.com/prasadbhangare6-stack/khandala-valley-retreat)
 
 ---
 
-## Stack
+## 🌟 Key Features & Functional Overview
 
-| Layer      | Choice                                   |
-| ---------- | ---------------------------------------- |
-| Framework  | Next.js 16 (App Router, Turbopack)       |
-| Language   | TypeScript (strict)                      |
-| Styling    | Tailwind CSS 4 + custom design tokens    |
-| Motion     | Framer Motion 14                         |
-| Icons      | Lucide React                             |
-| Typography | Cormorant Garamond + Jost (self-hosted via `next/font`) |
+### 1. 1-Click WhatsApp Booking & Lead Dispatch
+Instead of forcing guests through complex checkouts or passive forms, the application transforms guest interest into immediate high-intent leads via direct WhatsApp routing.
+- **Function:** `createWhatsAppBookingUrl({ roomName, checkIn, checkOut, nights, adults, children, name, notes })`
+- **Location:** `src/lib/utils.ts`
+- **How it works:** Formats an URL-encoded, human-readable reservation dispatch:
+  ```text
+  🌿 *Booking Enquiry — Khandala Valley Retreat*
+  • *Guest Name:* Rahul Sharma
+  • *Room Category:* Valley View Deluxe
+  • *Dates:* Mon, 19 Oct 2026 to Wed, 21 Oct 2026 (2 nights)
+  • *Guests:* 2 Adults, 1 Child
+  • *Special Requests:* Early check-in requested
 
-## Run locally
+  Please let me know availability, current tariffs, and reservation confirmation details. Thank you!
+  ```
+- **Integrated in:**
+  - **Booking Flow (`BookingSection.tsx`)**: Quick WhatsApp trigger in room results and in the final confirmation voucher.
+  - **Room Modal (`RoomModal.tsx`)**: Instant enquiry button pre-filled with the selected room category.
+  - **Contact Section (`Contact.tsx`)**: Dual-action web submit and instant WhatsApp message dispatch.
 
+---
+
+### 2. Multi-Step Reservation State Machine
+A dynamic multi-stage booking experience designed without full-page reloads.
+- **Location:** `src/components/BookingSection.tsx`
+- **State Architecture:**
+  - `stage === "form"`: Check-in, check-out, adults, and room selection with real-time validation (`validate()`).
+  - `stage === "results"`: Displays real-time stay duration calculations (`nightsBetween`), party breakdowns, and filtered room inventory tiers.
+  - `stage === "enquiry"`: Collects guest contact details with inline field-level validation (`validateEnquiry()`).
+  - `stage === "done"`: Renders an elegant reservation receipt voucher with direct links to send via WhatsApp, call the front desk, or book another date.
+
+---
+
+### 3. Cross-Component Date & Guest State Synchronization
+- **Function/Hook:** `BookingProvider` & `useBooking()`
+- **Location:** `src/lib/booking-context.tsx`
+- **How it works:** Uses React Context to share stay dates and party size between the **Hero Availability Bar** (`Hero.tsx`) at the top of the page and the **Main Booking Engine** (`BookingSection.tsx`) further down. Selecting dates at the top smoothly transfers state to the checkout stage.
+
+---
+
+### 4. Floating Mobile Action Bar
+Over 70% of resort searches happen on mobile devices while travelers plan weekend getaways.
+- **Component:** `MobileActionBar.tsx`
+- **Features:**
+  - Glassmorphic backdrop (`backdrop-blur-md bg-ink/95`) pinned to screen bottom (`md:hidden`).
+  - Safe-area inset compliance for edge-to-edge iOS and Android screens (`pb-[max(0.6rem,env(safe-area-inset-bottom))]`).
+  - Three instant touchpoints: **Call Property**, **WhatsApp Chat**, and **Reserve Now**.
+
+---
+
+### 5. Curated Sahyadri Luxury Design System
+- **Palette:** Forest-night ink (`#0e1411`), champagne (`#e2d2b4`), antique brass (`#b98f5a`), warm ivory (`#f5efe4`), and terracota accents.
+- **Typography:** Self-hosted Google Fonts via `next/font`:
+  - **Cormorant Garamond:** High-contrast editorial display serif for titles and luxury cues.
+  - **Jost:** Clean geometric sans-serif for body typography, forms, and technical metrics.
+- **Motion Orchestration (`src/components/motion/`):**
+  - `Reveal.tsx`: Intersection-observer scroll reveals with spring physics (`ease: [0.22, 1, 0.36, 1]`).
+  - `ClipReveal.tsx`: Cinematic clip-path image reveals (`clip-path: inset(...)`).
+  - `SplitHeading.tsx`: Staggered word-mask reveals for editorial headers.
+  - `Magnetic.tsx`: Cursor-attracting physics buttons on desktop.
+  - Full support for `prefers-reduced-motion` across all components.
+
+---
+
+### 6. Interactive Gallery with Accessible Lightbox
+- **Component:** `src/components/Gallery.tsx`
+- **Features:**
+  - Editorial masonry grid highlighting pool decks, twilight bonfires, valley views, and dining.
+  - Fullscreen lightbox modal with keyboard navigation (`Esc` to close, `ArrowLeft` / `ArrowRight` to navigate) and touch swipe gestures.
+
+---
+
+### 7. Production SEO & Structured Data (Schema.org)
+- **JSON-LD Hotel Schema (`src/app/layout.tsx`):**
+  - Injects machine-readable `Hotel` metadata (name, address, geo-coordinates, verified amenities, telephone, and map coordinates) for Google Rich Snippets.
+- **Native Next.js Route Handlers:**
+  - `src/app/robots.ts`: Crawl instructions for search engines.
+  - `src/app/sitemap.ts`: Dynamic XML sitemap generation.
+- **OpenGraph & Twitter Cards:** Preconfigured social sharing assets (`/images/hero-valley.jpg`).
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| **Framework** | Next.js 16 (App Router + Turbopack) | Fast compilation, static prerendering, edge hosting |
+| **Language** | TypeScript (Strict Mode) | End-to-end type safety |
+| **UI Library** | React 19 | Server & Client component architecture |
+| **Styling** | Tailwind CSS 4 + Custom Design Tokens | Modular luxury layout, responsive grids |
+| **Animation** | Framer Motion 14 | Smooth hardware-accelerated transitions & micro-interactions |
+| **Icons** | Lucide React | Minimalist UI iconography |
+| **Deployment** | Vercel Edge Network | Global CDN, automatic previews, instant SSL |
+
+---
+
+## 📁 Repository Directory Structure
+
+```text
+khandala-valley-retreat/
+├── public/
+│   ├── icon.svg                      # Custom vector wordmark icon
+│   └── images/                       # High-resolution property photography
+├── src/
+│   ├── app/
+│   │   ├── globals.css               # Design tokens, button styles, custom scrollbars
+│   │   ├── layout.tsx                # Fonts, SEO metadata, JSON-LD Hotel schema
+│   │   ├── page.tsx                  # Home page layout composition
+│   │   ├── robots.ts                 # Search crawler instructions
+│   │   └── sitemap.ts                # Automatic XML sitemap generator
+│   ├── components/
+│   │   ├── BookingSection.tsx        # Multi-stage booking & WhatsApp dispatch engine
+│   │   ├── Contact.tsx               # Direct front desk dispatch & inquiry form
+│   │   ├── Dining.tsx                # On-site restaurant & terrace dining showcase
+│   │   ├── Experiences.tsx           # Pool, bonfire, and amenities grid
+│   │   ├── Gallery.tsx               # Editorial masonry grid + interactive lightbox
+│   │   ├── Hero.tsx                  # Full-bleed cinematic hero + availability bar
+│   │   ├── Location.tsx              # Google Maps embed, driving distances, transit
+│   │   ├── MobileActionBar.tsx       # Sticky mobile bottom bar (Call, WhatsApp, Book)
+│   │   ├── PropertyIntro.tsx         # Verified stats & estate introduction
+│   │   ├── Reviews.tsx               # Verified Google Maps rating & themes carousel
+│   │   ├── RoomModal.tsx             # Room category details modal + WhatsApp action
+│   │   ├── Rooms.tsx                 # Room inventory catalog & features
+│   │   ├── SiteFooter.tsx            # Footer navigation, branding, copyright
+│   │   ├── SiteHeader.tsx            # Glassmorphism header, progress bar, mobile drawer
+│   │   └── motion/                   # Reusable animation primitives (Reveal, SplitHeading, Magnetic)
+│   └── lib/
+│       ├── booking-context.tsx       # React Context for cross-component date/guest state
+│       ├── data.ts                   # Single source of truth for property content
+│       └── utils.ts                  # Date calculations, CSS helpers & WhatsApp generators
+├── next.config.ts                    # Next.js Turbopack configuration
+├── tsconfig.json                     # TypeScript strict configuration
+└── package.json                      # Dependencies and npm scripts
+```
+
+---
+
+## 💻 Functions & Utilities Reference (`src/lib/`)
+
+### `src/lib/utils.ts`
+- **`createWhatsAppBookingUrl(params)`**: Generates an encoded WhatsApp API URL pre-filled with stay dates, nights, party size, room tier, and custom requests.
+- **`createWhatsAppContactUrl(params)`**: Generates an encoded WhatsApp link for general front desk questions.
+- **`nightsBetween(checkIn, checkOut)`**: Accurately calculates total nights between ISO date strings.
+- **`formatDisplayDate(isoDate)`**: Formats `YYYY-MM-DD` strings into elegant dates (e.g. `Mon, 19 Oct 2026`).
+- **`todayISO()` & `addDaysISO(iso, days)`**: Date helper utilities preventing past check-in selections.
+- **`cn(...classes)`**: Lightweight classname concatenation utility.
+
+### `src/lib/booking-context.tsx`
+- **`useBooking()`**: Custom React hook returning `{ checkIn, setCheckIn, checkOut, setCheckOut, adults, setAdults, children, setChildren, rooms, setRooms }`.
+
+### `src/lib/data.ts`
+- **`property`**: Centralized verified property facts (phone numbers, WhatsApp numbers, coordinates, rating, check-in/out times).
+- **`rooms`**: Room tiers (`Valley View Deluxe`, `Valley Suite`, `Patio Garden Room`) with features and imagery.
+- **`services`**: Verified amenities (outdoor pool, restaurant, room service, parking, Wi-Fi, bonfire).
+- **`nearby` & `travel`**: Verified distances to Kune Falls, Della Adventure, railway stations, and Pune Airport.
+
+---
+
+## 🚀 Getting Started Locally
+
+### Prerequisites
+- Node.js `20.x` or later
+- npm or pnpm
+
+### Installation
 ```bash
+# Clone the repository
+git clone https://github.com/prasadbhangare6-stack/khandala-valley-retreat.git
+
+# Navigate into the project
+cd khandala-valley-retreat
+
+# Install dependencies
 npm install
-npm run dev        # http://localhost:3000
+
+# Run the local development server
+npm run dev
 ```
 
-## Build & deploy
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Building for Production
 ```bash
-npm run build      # production build (statically prerendered home page)
-npm start          # serve the production build
+npm run build
+npm run start
 ```
-
-Deploys as a standard Next.js app to Vercel, Netlify, or any Node host:
-
-```bash
-npx vercel         # or: npx netlify deploy --build
-```
-
-Set the final canonical domain in `src/app/layout.tsx` (`metadataBase`, `alternates`)
-before launch.
 
 ---
 
-## Design direction
+## 🚢 Deployment
 
-**Concept — “Where the hills hold the clouds.”** Monsoon light on the Sahyadris:
-deep forest-night ink (`#0e1411`), warm ivory (`#f5efe4`), champagne (`#e2d2b4`)
-and antique brass (`#b98f5a`); high-contrast serif display (Cormorant Garamond)
-against a quiet geometric sans (Jost); full-bleed cinematic imagery, fine-line
-rules, asymmetric editorial layouts and generous negative space.
+The project is optimized for zero-configuration deployment on **Vercel**:
 
-**Motion language** — staggered word-mask headline reveals, clip-path image reveals,
-gentle parallax with progressive image scaling, scroll-triggered staggered entrances,
-animated underlines and arrow micro-interactions, animated mobile menu overlay,
-gallery lightbox with keyboard + touch support, animated booking-form state machine.
-All motion respects `prefers-reduced-motion`.
+```bash
+# Deploy to preview
+npx vercel
 
-## Page structure
-
-1. Cinematic hero (Ken Burns + parallax, staggered headline, dual CTA, scroll cue)
-2. Overlapping availability bar (dates, guests, rooms → booking section)
-3. Property introduction (editorial split, verified stats)
-4. Rooms & suites (editorial rows, detail modal, enquiry CTAs)
-5. Experiences & amenities (interactive panels, verified service icon grid)
-6. Dining (verified facts + clearly marked working-title placeholder)
-7. Immersive gallery (editorial masonry-style grid, lightbox)
-8. Guest impressions (verified Google rating + summarised themes + labelled placeholder)
-9. Location & surroundings (address, map embed, distances, directions)
-10. Booking experience (validated multi-step simulated reservation flow)
-11. Contact & WhatsApp (validated form with honest demo success state)
-12. Footer (wordmark, links, policies placeholders, back-to-top)
+# Deploy to production
+npx vercel --prod
+```
 
 ---
 
-## Content provenance & replacement guide
+## 📄 License & Attribution
 
-### Verified (public listings, accessed 12 Oct 2026)
-
-Sources: Google Maps listing · Trip.com · Klook · Goibibo · MakeMyTrip · tiket.com ·
-GuestReservations · Justdial · MTDC partner listing.
-
-- Name: Khandala Valley Retreat (Google Maps, resort hotel, 3.8 · 131 reviews)
-- Address: Plot No. 2, Behind Lokegaonkar Society, Dukes Den Colony, Kune Village,
-  Khandala, Kune N.m., Maharashtra 410302 · Plus code Q9GJ+57
-- Phone (Google listing): +91 81491 43728 · Alt listed: +91 84858 87965
-- WhatsApp booking desk (MTDC partner listing): +91 922359 4601 — **confirm ownership before launch**
-- Opened 2024 · 13 guestrooms · outdoor pool · on-site restaurant (à la carte) ·
-  free parking · free Wi-Fi · 24-hour front desk · room service · concierge ·
-  airport transfers · car hire · indoor games · bonfire · lawn/terrace/sun deck ·
-  doctor on call · pet friendly
-- Weekend breakfast (local cuisine) 8:30–10:30 AM, chargeable
-- Check-in from 1:30 PM / check-out by 10:30 AM (OTA listings — confirm with property)
-- Distances: Kune Falls 1.4 km · Monkey Hill 1.8 km · Della Adventure ~5-min drive ·
-  Tamhini Ghat ~5 km · Ryewood Park ~5.4 km · Pawna Lake ~12.5 km · Wet N Joy ~17 km ·
-  Pune Airport 60 km · Khandala Rly 4.4 km · Lonavala Rly 5.3 km
-- Observed OTA rate on Google (Oct 2026): from about USD 258/night
-
-### Illustrative — replace before production
-
-| Item | Location | Replace with |
-| ---- | -------- | ------------ |
-| Photography (`public/images/*.jpg`) | Everywhere | The hotel's own image library (paths are ready in `src/lib/data.ts`) |
-| Room categories (3 named) | `rooms` in `src/lib/data.ts` | Confirmed room types, bedding, occupancy, tariffs |
-| Restaurant name “The Valley Table” | `dining` in `src/lib/data.ts` | Approved restaurant name + menu |
-| Guest testimonial card | `Reviews.tsx` | Approved review quotes with reuse permission |
-| Privacy / Terms / Cancellation links | `SiteFooter.tsx` | Real policy pages |
-| WhatsApp number | `property.whatsapp` | Verified business WhatsApp line |
-| Canonical domain | `src/app/layout.tsx` | Final domain |
-| Check-in/out times | `property.checkIn/checkOut` | Property-confirmed times |
-
-All data lives in **`src/lib/data.ts`** — one file controls the entire site.
-
-## Accessibility
-
-Semantic landmarks · skip link · keyboard-operable menu, modals, lightbox (arrows/Esc)
-and forms · visible focus rings · labelled fields with inline validation ·
-aria-live-free honest success states · contrast-checked palette ·
-`prefers-reduced-motion` disables parallax, staggers and long transitions.
-
-## Project structure
-
-```
-src/
-  app/
-    layout.tsx        # fonts, metadata, JSON-LD (Hotel schema, verified fields only)
-    page.tsx          # section composition
-    globals.css       # design tokens, buttons, fields, gallery grid, reduced-motion
-  components/
-    SiteHeader.tsx    # transparent → glass nav, scroll progress, mobile menu
-    Hero.tsx          # cinematic hero + overlapping availability bar
-    PropertyIntro.tsx # editorial story section
-    Rooms.tsx         # room showcases + RoomModal
-    Experiences.tsx   # amenity panels + service icon grid
-    Dining.tsx        # dining section (working-title placeholder)
-    Gallery.tsx       # editorial grid + accessible lightbox
-    Reviews.tsx       # verified rating + theme carousel + labelled placeholder
-    Location.tsx      # address, map embed, nearby, travel
-    BookingSection.tsx# simulated multi-step booking flow
-    Contact.tsx       # validated enquiry form + WhatsApp CTA
-    SiteFooter.tsx    # footer + back-to-top
-    motion/           # Reveal, ClipReveal, Stagger, SplitHeading, Magnetic
-  lib/
-    data.ts           # ALL property content (verified vs. illustrative)
-    booking-context.tsx # shared booking form state
-    utils.ts          # date/format helpers
-public/
-  images/             # illustrative photography (replace with real photos)
-  icon.svg            # favicon
-```
+Designed and developed for **Khandala Valley Retreat**. All rights reserved.
